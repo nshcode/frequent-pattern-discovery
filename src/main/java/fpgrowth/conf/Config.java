@@ -32,7 +32,8 @@ public class Config {
 
 		fpGrowthPropFile = new File(fpGrowthPropFileName);
 		if (!fpGrowthPropFile.exists()) {
-			logger.log(Level.SEVERE, getMessage("the fpGroth properties file", fpGrowthPropFile.getAbsolutePath(), "does not exist!"));
+			logger.log(Level.SEVERE,
+					getMessage("the fpGroth properties file", fpGrowthPropFile.getAbsolutePath(), "does not exist!"));
 			System.exit(-1);
 		}
 
@@ -87,16 +88,20 @@ public class Config {
 		builder.setDelimiter(delimiter.charAt(0));
 
 		String quote = fpGrowthProps.getProperty("quote");
-		if (quote != null && !quote.isEmpty())
-			builder.setQuote(quote.charAt(0));
+		if (quote == null || quote.isEmpty())
+			logger.log(Level.WARNING, "the property qutoe is undefined!");
+		else if (quote.length() > 1)
+			logger.log(Level.WARNING, "the property qutoe consists of more than one character! It ignored.");
 		else
-			builder.setQuote('\'');
+			builder.setQuote(quote.charAt(0));
 
 		String escape = fpGrowthProps.getProperty("escape");
-		if (escape != null && !escape.isEmpty())
-			builder.setEscape(escape.charAt(0));
+		if (escape == null || escape.isEmpty())
+			logger.log(Level.WARNING, "the property escape is undefined!");
+		else if (escape.length() > 1)
+			logger.log(Level.WARNING, "the property escape consists of more than one character! It ignored.");
 		else
-			builder.setEscape('\\');
+			builder.setEscape(escape.charAt(0));
 
 		CSVFormat csvFormat = builder.get();
 		return csvFormat;
@@ -121,7 +126,8 @@ public class Config {
 		try {
 			Integer.parseInt(fpGrowthProps.getProperty(key).trim());
 		} catch (NumberFormatException e) {
-			logger.log(Level.SEVERE, "the relative minimum support must be an integer number! E.g. 50 (means minSup = 50%)");
+			logger.log(Level.SEVERE,
+					"the relative minimum support must be an integer number! E.g. 50 (means minSup = 50%)");
 			error = true;
 		}
 		String delimiter = fpGrowthProps.getProperty("delimiter");

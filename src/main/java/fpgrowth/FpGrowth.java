@@ -20,6 +20,7 @@ import fpgrowth.utils.TimeUtil;
 /**
  * 
  * @author Nuhad.Shaabani
+ * 
  */
 public class FpGrowth {
 
@@ -60,7 +61,7 @@ public class FpGrowth {
 				new Object[] { execTime, TimeUtil.toString(execTime) });
 	}
 
-	public static void generateFreqSets(FpTree fpTree, Map<Item, PrintWriter> item2writerMap) throws Exception {
+	private static void generateFreqSets(FpTree fpTree, Map<Item, PrintWriter> item2writerMap) throws Exception {
 		PrintWriter printer;
 		while (fpTree.hasHeaderToProcess()) {
 			HeaderNode hNode = fpTree.getNextHeaderNode();
@@ -75,7 +76,7 @@ public class FpGrowth {
 		closeOutputWriter(item2writerMap);
 	}
 
-	public static void generateFreqSets(FpTree fpTree, StringBuffer currentSb, PrintWriter printer) {
+	private static void generateFreqSets(FpTree fpTree, StringBuffer currentSb, PrintWriter printer) {
 		StringBuffer prevSb = currentSb;
 		while (fpTree.hasHeaderToProcess()) {
 			HeaderNode hNode = fpTree.getNextHeaderNode();
@@ -89,7 +90,7 @@ public class FpGrowth {
 		}
 	}
 
-	public static FpTree createFpTree(Map<String, Item> att2ItemMap, List<Item> freqItemList) throws Exception {
+	private static FpTree createFpTree(Map<String, Item> att2ItemMap, List<Item> freqItemList) throws Exception {
 		int minSup = getAbsoluteMinSup();
 		FpTree fpTree = new FpTree(minSup, freqItemList);
 		FileReader reader = new FileReader(Config.getInputDataFile());
@@ -111,7 +112,7 @@ public class FpGrowth {
 		return fpTree;
 	}
 
-	public static List<Item> indexAndGetFreqItems(Map<String, Item> attValue2ItemMap) {
+	private static List<Item> indexAndGetFreqItems(Map<String, Item> attValue2ItemMap) {
 		List<Item> freqItemList = new ArrayList<>(attValue2ItemMap.values());
 		Collections.sort(freqItemList);
 		for (int i = 0; i < freqItemList.size(); i++) {
@@ -122,7 +123,7 @@ public class FpGrowth {
 		return freqItemList;
 	}
 
-	public static void removeUnfrequentItems(Map<String, Item> att2ItemMap) {
+	private static void removeUnfrequentItems(Map<String, Item> att2ItemMap) {
 		List<String> unfreqAtts = new ArrayList<>();
 		int minSup = getAbsoluteMinSup();
 		for (String att : att2ItemMap.keySet()) {
@@ -138,7 +139,7 @@ public class FpGrowth {
 		Statistics.setUnfrequentItems(unfreqAtts);
 	}
 
-	public static Map<String, Item> createAndCountItems() throws Exception {
+	private static Map<String, Item> createAndCountItems() throws Exception {
 		Map<String, Item> att2ItemMap = new HashMap<>();
 		FileReader reader = new FileReader(Config.getInputDataFile());
 		Iterable<CSVRecord> records = Config.getCSVFormat().parse(reader);
@@ -160,13 +161,13 @@ public class FpGrowth {
 		return att2ItemMap;
 	}
 
-	public static int getAbsoluteMinSup() {
+	private static int getAbsoluteMinSup() {
 		int minSup = Math.round(Config.getRelativeMinimumSupport() * Statistics.getRecordCount() / 100);
 		Statistics.setAbsoluteMinimumSupport(minSup);
 		return minSup;
 	}
 
-	public static Map<Item, PrintWriter> createOutputWriter(List<Item> freqItemList) throws Exception {
+	private static Map<Item, PrintWriter> createOutputWriter(List<Item> freqItemList) throws Exception {
 		Map<Item, PrintWriter> item2writerMap = new HashMap<>();
 		PrintWriter writer;
 		File outputDir = Config.getOutputDataDirectory();
@@ -183,7 +184,7 @@ public class FpGrowth {
 		return item2writerMap;
 	}
 
-	public static void closeOutputWriter(Map<Item, PrintWriter> item2writerMap) {
+	private static void closeOutputWriter(Map<Item, PrintWriter> item2writerMap) {
 		for (PrintWriter writer : item2writerMap.values())
 			writer.close();
 	}
