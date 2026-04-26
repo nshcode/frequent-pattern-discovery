@@ -1,4 +1,4 @@
-# Frequent Pattern Discovery
+# Frequent Itemsets Discovery
 
 ## About 
 The project currently contains the Java source code of an implementation of the FP-Growth algorithm for discovering frequent item sets in transactional datasets.
