@@ -50,6 +50,7 @@ public class FpGrowth {
 
 		List<Item> freqItemList = indexAndGetFreqItems(att2ItemMap);
 		logger.log(Level.INFO, "frequent items: {0}", Statistics.getFrequentItems());
+		writeFreqItems(freqItemList);
 
 		Map<Item, PrintWriter> item2writerMap = createOutputWriter(freqItemList);
 		FpTree fpTree = createFpTree(att2ItemMap, freqItemList);
@@ -187,5 +188,17 @@ public class FpGrowth {
 	private static void closeOutputWriter(Map<Item, PrintWriter> item2writerMap) {
 		for (PrintWriter writer : item2writerMap.values())
 			writer.close();
+	}
+
+	private static void writeFreqItems(List<Item> freqItemList) throws Exception {
+		File outputDir = Config.getOutputDataDirectory();
+		PrintWriter writer = new PrintWriter(
+				outputDir + File.separator + new File(Config.getDatasetName() + "FreqItems"));
+		for (Item item : freqItemList) {
+			writer.print(item);
+			writer.print(",");
+			writer.println(item.getCount());
+		}
+		writer.close();
 	}
 }
