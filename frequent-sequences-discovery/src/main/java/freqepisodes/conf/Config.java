@@ -18,7 +18,7 @@ public class Config {
 
 	private static Logger logger = Logger.getLogger(Config.class.getName());
 	
-	private final static String DEFAULT_PROPS_FILE_NAME = "conf2/freqSeqDiscovery.properties";
+	private final static String DEFAULT_PROPS_FILE_NAME = "conf/freqSeqDiscovery.properties";
 
 	private static String freqSeqDiscPropFileName;
 	private static File freqSeqDiscPropFile;

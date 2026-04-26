@@ -24,8 +24,6 @@ import freqepisodes.utils.Utils;
  */
 public class FreqSeqDiscoverer {
 
-	private static int seqColIdx = 3;
-
 	public static void main(String[] args) throws Exception {
 
 		String discoveryMode = Config.getDiscoveryMode();
@@ -46,7 +44,7 @@ public class FreqSeqDiscoverer {
 		}
 	}
 
-	public static void generateFreqEpisodes(Map<String, Event> evName2evMap) throws Exception {
+	private static void generateFreqEpisodes(Map<String, Event> evName2evMap) throws Exception {
 		Map<String, PrintWriter> evName2writerMap = createOutputWriter(evName2evMap);
 		File freqEvNameSetsInDir = Config.getFreqEvNameSetsInDir();
 
@@ -59,7 +57,7 @@ public class FreqSeqDiscoverer {
 		closeOutputWriter(evName2writerMap);
 	}
 
-	public static EpisodeTree generateFreqEpisodes(String evName, Map<String, Event> evName2evMap, File inputDir)
+	private static EpisodeTree generateFreqEpisodes(String evName, Map<String, Event> evName2evMap, File inputDir)
 			throws Exception {
 		int minSup = getAbsoluteMinSup();
 		EpisodeTree episodeTree = new EpisodeTree(minSup);
@@ -67,7 +65,7 @@ public class FreqSeqDiscoverer {
 
 		String line = reader.readLine();
 		while (line != null) {
-			int freq = Integer.parseInt(line.split(":")[1]);
+			// int freq = Integer.parseInt(line.split(":")[1]);
 			String[] evNames = line.split(":")[0].split(",");
 			List<Event> events = new ArrayList<>();
 			for (String name : evNames) {
@@ -81,22 +79,22 @@ public class FreqSeqDiscoverer {
 		return episodeTree;
 	}
 
-	public static void putEventOccurrences(Map<String, Event> evName2evMap) throws Exception {
+	private static void putEventOccurrences(Map<String, Event> evName2evMap) throws Exception {
 		BufferedReader seqReader = new BufferedReader(new FileReader(Config.getSequencesInFile()));
 
 		CSVFormat csvFormat = Config.getCSVFormat();
-		Iterable<CSVRecord> sequences = csvFormat.parse(seqReader);
+		Iterable<CSVRecord> records = csvFormat.parse(seqReader);
 		int counter = 0;
-		for (CSVRecord sequnce : sequences) {
-			String names = sequnce.get(seqColIdx);
+		for (CSVRecord record : records) {
+			String seq = record.get(0);
 			counter += 1;
-			putEventOccurrences(counter, names.split(";"), evName2evMap);
+			putEventOccurrences(counter, seq.split(","), evName2evMap);
 		}
 		seqReader.close();
 		Statistics.setSequenceCount(counter);
 	}
 
-	public static void putEventOccurrences(int seqId, String[] evNames, Map<String, Event> evName2evMap) {
+	private static void putEventOccurrences(int seqId, String[] evNames, Map<String, Event> evName2evMap) {
 		Map<String, Integer> evName2count = new HashMap<>();
 		for (int i = 0; i < evNames.length; i++) {
 			String nName = Utils.normalizeName(evNames[i]);
@@ -120,7 +118,7 @@ public class FreqSeqDiscoverer {
 		}
 	}
 
-	public static void indexFreqEvents(List<Event> freqEvents) {
+	private static void indexFreqEvents(List<Event> freqEvents) {
 		Collections.sort(freqEvents);
 		for (int i = 0; i < freqEvents.size(); i++) {
 			Event ev = freqEvents.get(i);
@@ -128,7 +126,7 @@ public class FreqSeqDiscoverer {
 		}
 	}
 
-	public static List<Event> getFreqEvents() throws Exception {
+	private static List<Event> getFreqEvents() throws Exception {
 		BufferedReader reader = new BufferedReader(new FileReader(Config.getFreqEvNamesInFile()));
 
 		List<Event> freqEvents = new ArrayList<>();
@@ -144,7 +142,7 @@ public class FreqSeqDiscoverer {
 		return freqEvents;
 	}
 
-	public static Map<String, PrintWriter> createOutputWriter(Map<String, Event> evName2evtMap) throws Exception {
+	private static Map<String, PrintWriter> createOutputWriter(Map<String, Event> evName2evtMap) throws Exception {
 		File freqEpisodesOutDir = Config.getFreqEpisodesOutDir();
 
 		Map<String, PrintWriter> evName2writerMap = new HashMap<>();
@@ -164,29 +162,29 @@ public class FreqSeqDiscoverer {
 		return evName2writerMap;
 	}
 
-	public static void closeOutputWriter(Map<String, PrintWriter> evName2writerMap) {
+	private static void closeOutputWriter(Map<String, PrintWriter> evName2writerMap) {
 		for (PrintWriter writer : evName2writerMap.values())
 			writer.close();
 	}
 
-	public static void processModeA() throws Exception {
+	private static void processModeA() throws Exception {
 		BufferedReader seqReader = new BufferedReader(new FileReader(Config.getSequencesInFile()));
 		PrintWriter writerOfEvNames = new PrintWriter(Config.getEvNameSetsOutFile());
 
 		CSVFormat csvFormat = Config.getCSVFormat();
-		Iterable<CSVRecord> sequences = csvFormat.parse(seqReader);
+		Iterable<CSVRecord> records = csvFormat.parse(seqReader);
 		int counter = 0;
-		for (CSVRecord sequnce : sequences) {
-			String names = sequnce.get(seqColIdx);
+		for (CSVRecord record : records) {
+			String seq = record.get(0);
 			counter += 1;
-			extractAndWriteEvNames(counter, names.split(";"), writerOfEvNames);
+			extractAndWriteEvNames(counter, seq.split(","), writerOfEvNames);
 		}
 
 		seqReader.close();
 		writerOfEvNames.close();
 	}
 
-	public static void extractAndWriteEvNames(int seqId, String[] evNames, PrintWriter writerOfEvNames) {
+	private static void extractAndWriteEvNames(int seqId, String[] evNames, PrintWriter writerOfEvNames) {
 		Map<String, Integer> evName2count = new HashMap<>();
 		for (int i = 0; i < evNames.length; i++) {
 			String nName = Utils.normalizeName(evNames[i]);
@@ -206,6 +204,6 @@ public class FreqSeqDiscoverer {
 	private static int getAbsoluteMinSup() {
 		int minSup = Math.round(Config.getRelativeMinimumSupport() * Statistics.getSequenceCount() / 100);
 		Statistics.setAbsoluteMinimumSupport(minSup);
-		return 1; // minSup;
+		return minSup;
 	}
 }
