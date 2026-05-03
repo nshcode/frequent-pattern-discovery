@@ -1,4 +1,4 @@
-package freqepisodes;
+package freqseq;
 
 /**
  * 

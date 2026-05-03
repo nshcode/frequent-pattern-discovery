@@ -1,11 +1,11 @@
-package freqepisodes;
+package freqseq;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import freqepisodes.utils.Utils;
+import freqseq.utils.Utils;
 
 /**
  * 

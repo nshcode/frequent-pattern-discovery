@@ -1,4 +1,4 @@
-package freqepisodes.utils;
+package freqseq.utils;
 
 /**
  * 

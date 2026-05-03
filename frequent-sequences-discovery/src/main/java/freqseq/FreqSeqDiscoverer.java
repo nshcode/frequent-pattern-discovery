@@ -1,4 +1,4 @@
-package freqepisodes;
+package freqseq;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,9 +13,9 @@ import java.util.Map;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
-import freqepisodes.conf.Config;
-import freqepisodes.utils.Statistics;
-import freqepisodes.utils.Utils;
+import freqseq.conf.Config;
+import freqseq.utils.Statistics;
+import freqseq.utils.Utils;
 
 /**
  * 

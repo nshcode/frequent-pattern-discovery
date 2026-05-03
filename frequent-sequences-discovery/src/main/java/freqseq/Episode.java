@@ -1,4 +1,4 @@
-package freqepisodes;
+package freqseq;
 
 import java.util.ArrayList;
 import java.util.HashSet;

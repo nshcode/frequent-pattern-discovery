@@ -1,4 +1,4 @@
-package freqepisodes.conf;
+package freqseq.conf;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,14 +18,14 @@ public class Config {
 
 	private static Logger logger = Logger.getLogger(Config.class.getName());
 	
-	private final static String DEFAULT_PROPS_FILE_NAME = "conf/freqSeqDiscovery.properties";
+	private final static String DEFAULT_FREQ_SEQ_PROPS_FNAME = "conf/freqSeqDiscovery.properties";
 
 	private static String freqSeqDiscPropFileName;
 	private static File freqSeqDiscPropFile;
 	private static Properties freqSeqDiscProps;
 	
 	static {
-		freqSeqDiscPropFileName = DEFAULT_PROPS_FILE_NAME;
+		freqSeqDiscPropFileName = DEFAULT_FREQ_SEQ_PROPS_FNAME;
 		freqSeqDiscPropFile = new File(freqSeqDiscPropFileName);
 		loadConfiguration();
 	}
