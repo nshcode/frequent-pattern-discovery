@@ -28,9 +28,9 @@ public class FreqSeqDiscoverer {
 
 		String discoveryMode = Config.getDiscoveryMode();
 
-		if (discoveryMode.equals("init")) {
+		if ("init".equalsIgnoreCase(discoveryMode)) {
 			processModeA();
-		} else {
+		} else if ("discovery".equalsIgnoreCase(discoveryMode)) {
 			List<Event> freqEvents = getFreqEvents();
 			indexFreqEvents(freqEvents);
 
@@ -41,6 +41,8 @@ public class FreqSeqDiscoverer {
 			}
 			putEventOccurrences(evName2evtMap);
 			generateFreqEpisodes(evName2evtMap);
+		} else {
+			System.out.println(discoveryMode + " unknown discob´very mode!");
 		}
 	}
 
@@ -202,7 +204,7 @@ public class FreqSeqDiscoverer {
 	}
 
 	private static int getAbsoluteMinSup() {
-		int minSup = Math.round(Config.getRelativeMinimumSupport() * Statistics.getSequenceCount() / 100);
+		int minSup = Math.round(Config.getRelativeMinSupport() * Statistics.getSequenceCount() / 100);
 		Statistics.setAbsoluteMinimumSupport(minSup);
 		return minSup;
 	}

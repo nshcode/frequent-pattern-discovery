@@ -17,32 +17,41 @@ import org.apache.commons.csv.CSVFormat.Builder;
 public class Config {
 
 	private static Logger logger = Logger.getLogger(Config.class.getName());
-	
+
 	private final static String DEFAULT_FREQ_SEQ_PROPS_FNAME = "conf/freqSeqDiscovery.properties";
 
-	private static String freqSeqDiscPropFileName;
+	private static String freqSeqDiscPropFName;
 	private static File freqSeqDiscPropFile;
 	private static Properties freqSeqDiscProps;
-	
+
 	static {
-		freqSeqDiscPropFileName = DEFAULT_FREQ_SEQ_PROPS_FNAME;
-		freqSeqDiscPropFile = new File(freqSeqDiscPropFileName);
+		freqSeqDiscPropFName = System.getProperty("freqSeqDiscPropFileName");
+		if (freqSeqDiscPropFName == null || freqSeqDiscPropFName.isBlank() || !exists(freqSeqDiscPropFName))
+			freqSeqDiscPropFName = DEFAULT_FREQ_SEQ_PROPS_FNAME;
+
+		freqSeqDiscPropFile = new File(freqSeqDiscPropFName);
+		if (!freqSeqDiscPropFile.exists()) {
+			logger.log(Level.SEVERE,
+					getMessage("the properties file", freqSeqDiscPropFile.getAbsolutePath(), "does not exist!"));
+			System.exit(-1);
+		}
+
 		loadConfiguration();
+		checkProperties();
 	}
-	
+
 	public static void loadConfiguration() {
 		freqSeqDiscProps = new Properties();
-		
 		try {
 			freqSeqDiscProps.load(new FileInputStream(freqSeqDiscPropFile));
 		} catch (Exception e) {
-			// TODO: handle exception
+			logger.log(Level.SEVERE,
+					getMessage("a problem occurs during loding", freqSeqDiscPropFile.getAbsolutePath(), "!"), e);
+			System.exit(-1);
 		}
-		
-		
 	}
 
-	public static int getRelativeMinimumSupport() {
+	public static int getRelativeMinSupport() {
 		String key = "relativeMinSup";
 		int minSup = Integer.parseInt(freqSeqDiscProps.getProperty(key).trim());
 		return minSup;
@@ -110,6 +119,64 @@ public class Config {
 
 		CSVFormat csvFormat = builder.get();
 		return csvFormat;
+	}
+
+	private static void checkProperties() {
+		boolean error = false;
+
+		String key = "discoveryMode";
+		String mode = freqSeqDiscProps.getProperty(key);
+		if (mode == null || mode.isEmpty()) {
+			logger.log(Level.SEVERE, " the algorithm mode is not defined.");
+			error = true;
+		}
+
+		if (!"init".equalsIgnoreCase(mode) && !"discovery".equalsIgnoreCase(mode)) {
+			logger.log(Level.SEVERE, "the algorithm mode must \"either\" init or \"discovery\".");
+			error = true;
+		}
+
+		key = "sequencesInputFile";
+		if (!exists(freqSeqDiscProps.getProperty(key))) {
+			logger.log(Level.SEVERE,
+					getMessage("the input dataset", freqSeqDiscProps.getProperty(key), "does not exist!"));
+			error = true;
+		}
+		key = "freqEpisodesOutputDir";
+		if (!exists(freqSeqDiscProps.getProperty(key))) {
+			logger.log(Level.SEVERE,
+					getMessage("the output directory", freqSeqDiscProps.getProperty(key), "does not exist!"));
+			error = true;
+		}
+		key = "relativeMinSup";
+		try {
+			Integer.parseInt(freqSeqDiscProps.getProperty(key).trim());
+		} catch (NumberFormatException e) {
+			logger.log(Level.SEVERE,
+					"the relative minimum support must be an integer number! E.g. 50 (means minSup = 50%)");
+			error = true;
+		}
+		String delimiter = freqSeqDiscProps.getProperty("delimiter");
+		if (delimiter == null || delimiter.isEmpty() || delimiter.length() != 1) {
+			logger.log(Level.SEVERE, "the delimiter is undefined or consists of more than one char!");
+			error = true;
+		}
+		if (error)
+			System.exit(-1);
+	}
+
+	private static boolean exists(String fileName) {
+		return (new File(fileName)).exists();
+	}
+
+	private static String getMessage(String s, String value, String e) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(s);
+		sb.append(" ");
+		sb.append(value);
+		sb.append(" ");
+		sb.append(e);
+		return sb.toString();
 	}
 
 }
