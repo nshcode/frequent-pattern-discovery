@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -24,12 +26,24 @@ import freqseq.utils.Utils;
  */
 public class FreqSeqDiscoverer {
 
+	private final static String DEFAULT_LOG_PROPS_FILE_NAME = "./conf/logging.properties";
+	private static Logger logger;
+
+	static {
+		String logPropFileName = System.getProperty("java.util.logging.config.file");
+		if (logPropFileName == null || logPropFileName.isBlank() || !(new File(logPropFileName)).exists())
+			logPropFileName = DEFAULT_LOG_PROPS_FILE_NAME;
+		File logPropFile = new File(logPropFileName);
+		if (logPropFile.exists())
+			System.setProperty("java.util.logging.config.file", logPropFileName);
+		logger = Logger.getLogger(FreqSeqDiscoverer.class.getName());
+	}
+
 	public static void main(String[] args) throws Exception {
 
 		String discoveryMode = Config.getDiscoveryMode();
-
 		if ("init".equalsIgnoreCase(discoveryMode)) {
-			processModeA();
+			processInitMode();
 		} else if ("discovery".equalsIgnoreCase(discoveryMode)) {
 			List<Event> freqEvents = getFreqEvents();
 			indexFreqEvents(freqEvents);
@@ -42,11 +56,15 @@ public class FreqSeqDiscoverer {
 			putEventOccurrences(evName2evtMap);
 			generateFreqEpisodes(evName2evtMap);
 		} else {
-			System.out.println(discoveryMode + " unknown discob´very mode!");
+			logger.log(Level.SEVERE, "The algorithm has two modes: \"INIT\" or \"DISCOVERY\". The mode {0} is unknown.",
+					discoveryMode);
+			System.exit(-1);
 		}
 	}
 
 	private static void generateFreqEpisodes(Map<String, Event> evName2evMap) throws Exception {
+		logger.log(Level.INFO, "Generating frequent episodes (subsequences) ... "); 
+		
 		Map<String, PrintWriter> evName2writerMap = createOutputWriter(evName2evMap);
 		File freqEvNameSetsInDir = Config.getFreqEvNameSetsInDir();
 
@@ -57,6 +75,8 @@ public class FreqSeqDiscoverer {
 		}
 
 		closeOutputWriter(evName2writerMap);
+		
+		logger.log(Level.INFO, "Frquent episodes are discovered and in the directory {0} saved.", Config.getFreqEpisodesOutDir());
 	}
 
 	private static EpisodeTree generateFreqEpisodes(String evName, Map<String, Event> evName2evMap, File inputDir)
@@ -94,6 +114,8 @@ public class FreqSeqDiscoverer {
 		}
 		seqReader.close();
 		Statistics.setSequenceCount(counter);
+		
+		logger.log(Level.INFO, "Frequent events are associated with their occurrences in the sequences.");
 	}
 
 	private static void putEventOccurrences(int seqId, String[] evNames, Map<String, Event> evName2evMap) {
@@ -141,6 +163,7 @@ public class FreqSeqDiscoverer {
 		}
 
 		reader.close();
+		logger.log(Level.INFO, "Frequent events are loaded from the file {0}", Config.getFreqEvNamesInFile());
 		return freqEvents;
 	}
 
@@ -169,7 +192,7 @@ public class FreqSeqDiscoverer {
 			writer.close();
 	}
 
-	private static void processModeA() throws Exception {
+	private static void processInitMode() throws Exception {
 		BufferedReader seqReader = new BufferedReader(new FileReader(Config.getSequencesInFile()));
 		PrintWriter writerOfEvNames = new PrintWriter(Config.getEvNameSetsOutFile());
 
@@ -184,6 +207,7 @@ public class FreqSeqDiscoverer {
 
 		seqReader.close();
 		writerOfEvNames.close();
+		logger.log(Level.INFO, "Event names are extracted and in {0} saved.", writerOfEvNames);
 	}
 
 	private static void extractAndWriteEvNames(int seqId, String[] evNames, PrintWriter writerOfEvNames) {
