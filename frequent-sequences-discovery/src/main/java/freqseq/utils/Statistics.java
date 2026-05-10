@@ -41,7 +41,7 @@ public class Statistics {
 	}
 
 	public static void setEndEvNamesExtractTime(long endTime) {
-		startEvNamesExtractTime = endTime;
+		endEvNamesExtractTime = endTime;
 	}
 
 	public static long getEndEvNamesExtractTime() {
@@ -69,6 +69,6 @@ public class Statistics {
 	}
 
 	public static long getDiscoveryDuration() {
-		return getStartDiscoveryTime() - getEndDiscoveryTime();
+		return getEndDiscoveryTime() -  getStartDiscoveryTime();
 	}
 }

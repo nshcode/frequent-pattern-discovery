@@ -17,6 +17,7 @@ import org.apache.commons.csv.CSVRecord;
 
 import freqseq.conf.Config;
 import freqseq.utils.Statistics;
+import freqseq.utils.TimeUtils;
 import freqseq.utils.Utils;
 
 /**
@@ -43,11 +44,19 @@ public class FreqSeqDiscoverer {
 
 		String discoveryMode = Config.getDiscoveryMode();
 		if ("init".equalsIgnoreCase(discoveryMode)) {
+			Statistics.setStartEvNamesExtractTime(System.currentTimeMillis());
+
 			processInitMode();
+
+			Statistics.setEndEvNamesExtractTime(System.currentTimeMillis());
+			long execTime = Statistics.getEvNamesExtractDuration();
+			logger.log(Level.INFO, "Time duration is {0} ms [{1}]",
+					new Object[] { execTime, TimeUtils.toString(execTime) });
 		} else if ("discovery".equalsIgnoreCase(discoveryMode)) {
+			Statistics.setStartDiscoveryTime(System.currentTimeMillis());
+
 			List<Event> freqEvents = getFreqEvents();
 			indexFreqEvents(freqEvents);
-
 			Map<String, Event> evName2evtMap = new HashMap<>();
 			for (Event ev : freqEvents) {
 				String evName = ev.getName();
@@ -55,6 +64,11 @@ public class FreqSeqDiscoverer {
 			}
 			putEventOccurrences(evName2evtMap);
 			generateFreqEpisodes(evName2evtMap);
+
+			Statistics.setEndDiscoveryTime(System.currentTimeMillis());
+			long execTime = Statistics.getDiscoveryDuration();
+			logger.log(Level.INFO, "Time duration is {0} ms [{1}]",
+					new Object[] { execTime, TimeUtils.toString(execTime) });
 		} else {
 			logger.log(Level.SEVERE, "The algorithm has two modes: \"INIT\" or \"DISCOVERY\". The mode {0} is unknown.",
 					discoveryMode);
@@ -63,8 +77,8 @@ public class FreqSeqDiscoverer {
 	}
 
 	private static void generateFreqEpisodes(Map<String, Event> evName2evMap) throws Exception {
-		logger.log(Level.INFO, "Generating frequent episodes (subsequences) ... "); 
-		
+		logger.log(Level.INFO, "Generating frequent episodes (subsequences) ... ");
+
 		Map<String, PrintWriter> evName2writerMap = createOutputWriter(evName2evMap);
 		File freqEvNameSetsInDir = Config.getFreqEvNameSetsInDir();
 
@@ -75,8 +89,9 @@ public class FreqSeqDiscoverer {
 		}
 
 		closeOutputWriter(evName2writerMap);
-		
-		logger.log(Level.INFO, "Frquent episodes are discovered and saved in the directory {0}.", Config.getFreqEpisodesOutDir());
+
+		logger.log(Level.INFO, "Frquent episodes are discovered and saved in the directory {0}.",
+				Config.getFreqEpisodesOutDir());
 	}
 
 	private static EpisodeTree generateFreqEpisodes(String evName, Map<String, Event> evName2evMap, File inputDir)
@@ -114,7 +129,7 @@ public class FreqSeqDiscoverer {
 		}
 		seqReader.close();
 		Statistics.setSequenceCount(counter);
-		
+
 		logger.log(Level.INFO, "Frequent events are associated with their occurrences in the sequences.");
 	}
 
