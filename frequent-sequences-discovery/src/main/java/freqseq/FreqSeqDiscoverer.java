@@ -76,7 +76,7 @@ public class FreqSeqDiscoverer {
 
 		closeOutputWriter(evName2writerMap);
 		
-		logger.log(Level.INFO, "Frquent episodes are discovered and in the directory {0} saved.", Config.getFreqEpisodesOutDir());
+		logger.log(Level.INFO, "Frquent episodes are discovered and saved in the directory {0}.", Config.getFreqEpisodesOutDir());
 	}
 
 	private static EpisodeTree generateFreqEpisodes(String evName, Map<String, Event> evName2evMap, File inputDir)
@@ -207,7 +207,7 @@ public class FreqSeqDiscoverer {
 
 		seqReader.close();
 		writerOfEvNames.close();
-		logger.log(Level.INFO, "Event names are extracted and in {0} saved.", writerOfEvNames);
+		logger.log(Level.INFO, "Event names are extracted and saved in {0}.", Config.getEvNameSetsOutFile());
 	}
 
 	private static void extractAndWriteEvNames(int seqId, String[] evNames, PrintWriter writerOfEvNames) {
