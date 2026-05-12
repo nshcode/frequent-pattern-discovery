@@ -123,9 +123,9 @@ public class FreqSeqDiscoverer {
 		Iterable<CSVRecord> records = csvFormat.parse(seqReader);
 		int counter = 0;
 		for (CSVRecord record : records) {
-			String seq = record.get(0);
+			String[] evNames = record.values();
 			counter += 1;
-			putEventOccurrences(counter, seq.split(","), evName2evMap);
+			putEventOccurrences(counter, evNames, evName2evMap);
 		}
 		seqReader.close();
 		Statistics.setSequenceCount(counter);
@@ -215,9 +215,9 @@ public class FreqSeqDiscoverer {
 		Iterable<CSVRecord> records = csvFormat.parse(seqReader);
 		int counter = 0;
 		for (CSVRecord record : records) {
-			String seq = record.get(0);
+			String[] evNames = record.values();
 			counter += 1;
-			extractAndWriteEvNames(counter, seq.split(","), writerOfEvNames);
+			extractAndWriteEvNames(counter, evNames, writerOfEvNames);
 		}
 
 		seqReader.close();
