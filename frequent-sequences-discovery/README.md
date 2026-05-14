@@ -18,7 +18,7 @@ The folder example-datasets contains two datasets:
 
 ## How to execute
 1.	freqSeqDiscoverer.jar expects two properties files:
-	  -   fpgrowth.properties file (required) that defines the input-parameter of the algorithm. You must update this file to meet your case (see conf/freqSeqDicoverer.properties).
+	  -   freqSeqDicoverer.properties file (required) that defines the input-parameter of the algorithm. You must update this file to meet your case (see conf/freqSeqDicoverer.properties).
     -  logging.properties file (optional) for the configuration of the logging output (see conf/logging.properties).
 2.	If you do not change the default location of the properties files, which is the conf directory  in the working directory, you simply execute
 
