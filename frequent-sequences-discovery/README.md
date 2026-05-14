@@ -7,7 +7,7 @@ In contrast to frequent item sets, the order in which items (events) appear in t
 
 The folder example-datasets contains two datasets:
 -	msnbc990928.seq is available in the [UC Irvine Machine Learning Repository](https://archive.ics.uci.edu/dataset/133/msnbc+com+anonymous+web+data)
--	word-cup-2018 is extracted from the [soccer dataset](https://github.com/nshcode/soccer).
+-	word-cup-2018 is extracted from the [Soccer Dataset](https://github.com/nshcode/soccer).
 
 ## How to build
 1.	Make sure that your working directory is the directory where you unzipped the project.
