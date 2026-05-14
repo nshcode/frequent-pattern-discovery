@@ -14,7 +14,7 @@ The folder example-datasets contains two datasets:
 2.	Execute
     -  `mvn clean package`
       
-  Maven will create a jar file called fpgrowth.jar in the working directory.
+  Maven will create a jar file called freqSecDiscoverer.jar in the working directory.
 
 ## How to execute
 1.	freqSeqDiscoverer.jar expects two properties files:
