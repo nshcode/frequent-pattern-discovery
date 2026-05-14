@@ -1,7 +1,7 @@
-# Frequent Itemsets Discovery
+# Frequent Sequences Discovery
 
 ## About 
-
+This project is about the discovery of frequent episodes (frequent subsequences) in sequence datasets. It is an implementation of the algorithm developed in Chapter 4 of my master's thesis in Computer Science. The thesis was written at the Artificial Intelligence Chair of TU Dortmund University in 2006. The thesis is available in German at https://www-ai.cs.tu-dortmund.de/en/PublicPublicationFiles/shaabani_2007a.pdf
 
 ## How to build
 1.	Make sure that your working directory is the directory where you unzipped the project.
