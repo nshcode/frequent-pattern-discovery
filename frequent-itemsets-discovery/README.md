@@ -1,8 +1,10 @@
 # Frequent Itemsets Discovery
 
 ## About 
-The project currently contains the Java source code of an implementation of the FP-Growth algorithm for discovering frequent item sets in transactional datasets.
+The project contains the Java source code of an implementation of the FP-Growth algorithm for discovering frequent item sets in transactional datasets.
 The title of the original scientific paper is [Mining Frequent Patterns without Candidate Generation](https://dl.acm.org/doi/10.1145/335191.335372)
+
+An introduction to the main algorithms for mining frequent item sets can be found in Chapter 1 of [my master's thesis](https://www-ai.cs.tu-dortmund.de/en/PublicPublicationFiles/shaabani_2007a.pdf), written in German at the Artificial Intelligence Chair of TU Dortmund University in 2006.
 
 ## How to build
 1.	Make sure that your working directory is the directory where you unzipped the project.
