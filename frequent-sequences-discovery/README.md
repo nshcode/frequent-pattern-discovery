@@ -3,7 +3,11 @@
 ## About 
 This project is about the discovery of frequent episodes (frequent subsequences) in sequence datasets. It is an implementation of the algorithm developed in Chapter 4 of my master's thesis in Computer Science. The thesis was written at the Artificial Intelligence Chair of TU Dortmund University in 2006. The thesis is available in German at https://www-ai.cs.tu-dortmund.de/en/PublicPublicationFiles/shaabani_2007a.pdf
 
-In contrast to frequent item sets discovery, the order in which the events appear in the sequence matters in the discovery process.
+In contrast to frequent item sets, the order in which items (events) appear in the records (sequences) matters.
+
+The folder example-datasets contains two datasets:
+-	msnbc990928.seq is available in the [UC Irvine Machine Learning Repository](https://archive.ics.uci.edu/dataset/133/msnbc+com+anonymous+web+data)
+-	word-cup-2018 is extracted from the [soccer dataset](https://github.com/nshcode/soccer).
 
 ## How to build
 1.	Make sure that your working directory is the directory where you unzipped the project.
